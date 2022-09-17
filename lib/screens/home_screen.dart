@@ -7,7 +7,6 @@ import 'package:poc_app/utils/styles.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -16,7 +15,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController listScrollController = ScrollController();
   // initilize the service
   final repo = FetchDataRepository();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,21 +30,53 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         actions: const [],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (listScrollController.hasClients) {
-            final position = listScrollController.position.maxScrollExtent;
-            listScrollController.animateTo(
-              position,
-              duration: Duration(seconds: 3),
-              curve: Curves.easeOut,
-            );
-          }
-        },
-        isExtended: true,
-        tooltip: "Scroll to Bottom",
-        child: Icon(Icons.arrow_downward),
-      ),
+      floatingActionButton:
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        SizedBox(
+          height: 30.0,
+          width: 30.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              onPressed: () {
+                if (listScrollController.hasClients) {
+                  final position =
+                      listScrollController.position.minScrollExtent;
+                  listScrollController.animateTo(
+                    position,
+                    duration: Duration(seconds: 10),
+                    curve: Curves.easeOut,
+                  );
+                }
+              },
+              isExtended: true,
+              tooltip: "Scroll to Bottom",
+              child: Icon(Icons.arrow_upward),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 30.0,
+          width: 30.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              onPressed: () {
+                if (listScrollController.hasClients) {
+                  final position =
+                      listScrollController.position.maxScrollExtent;
+                  listScrollController.animateTo(
+                    position,
+                    duration: Duration(seconds: 10),
+                    curve: Curves.easeOut,
+                  );
+                }
+              },
+              isExtended: true,
+              tooltip: "Scroll to Bottom",
+              child: Icon(Icons.arrow_downward),
+            ),
+          ),
+        ),
+      ]),
       body: SafeArea(
         child: StreamBuilder<List<TokenInfo>>(
           stream: repo.fetchPrices(),
@@ -100,14 +130,12 @@ class TokenWidget extends StatelessWidget {
   final String tokenSymbol;
   final String tokenPrice;
   final Color tokenColor;
-
   const TokenWidget({
     Key? key,
     required this.tokenSymbol,
     required this.tokenPrice,
     required this.tokenColor,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
